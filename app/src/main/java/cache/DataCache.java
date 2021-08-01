@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import Model.Event;
 import Model.Person;
@@ -82,6 +83,44 @@ public class DataCache {
             peopleByID.put(person[i].getPersonID(), person[i]);
         }
         this.peoplebyId = peopleByID;
+    }
+
+    public void setEventsByPersonId (Event[] events){
+        SortedSet<Event> personEvents = new TreeSet<>();
+
+        for(int i = 0; i < events.length; i++){
+            if(events[i].getPersonID() == events[i+1].getPersonID()) {
+                personEvents.add(events[i]);
+                if(i + 2 == events.length){
+                    personEvents.add(events[i+1]);
+                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
+                    personEvents.clear();
+                    break;
+                }
+                if(events[i+1].getPersonID() != events[i+2].getPersonID()) {
+                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
+                    personEvents.clear();
+                }
+            }
+        }
+    }
+
+    public Event getEvent (String eventID){
+        for(int i = 0; i < events.length; i++){
+            if(events[i].getEventID().equals(eventID)){
+                return events[i];
+            }
+        }
+        return null;
+    }
+
+    public Person getPerson (String personID){
+        for(int i = 0; i < people.length; i++){
+            if(people[i].getPersonID().equals(personID)){
+                return people[i];
+            }
+        }
+        return null;
     }
 
 

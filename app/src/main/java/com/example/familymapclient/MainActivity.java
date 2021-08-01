@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginFragment();
+        //mapFragment();
     }
 
     public void loginFragment(){
@@ -29,6 +30,19 @@ public class MainActivity extends AppCompatActivity {
             fragment = new LoginFragment();
             fragmentManager.beginTransaction()
                     .add(R.id.frameLayout, fragment)
+                    .commit();
+        }
+    }
+
+    public void mapFragment(){
+        fragmentManager = getSupportFragmentManager();
+        fragment = fragmentManager.findFragmentById(R.id.frameLayout);
+
+        if(fragment == null){
+            MapFragment mapFragment = new MapFragment();
+            fragmentManager
+                    .beginTransaction()
+                    .add(R.id.frameLayout, mapFragment)
                     .commit();
         }
     }

@@ -3,6 +3,8 @@ package com.example.familymapclient;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.os.Message;
@@ -29,7 +31,6 @@ import cache.DataCache;
 
 public class LoginFragment extends Fragment {
     private static final String USER_FULL_NAME = "UserFullName";
-    private static final String RESPONSE_STATUS = "ResponseStatus";
     private static final String AUTH_TOKEN = "AuthorizationToken";
     EditText etServerHost, etServerPort, etUsername, etPassword, etFirstName, etLastName, etEmail;
     Button registerBtn, signInBtn;
@@ -46,7 +47,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.login_fragment, container,false);
+        View view = inflater.inflate(R.layout.fragment_login, container,false);
 
         etServerHost = view.findViewById(R.id.serverHost);
         etServerPort = view.findViewById(R.id.serverPort);
@@ -86,6 +87,11 @@ public class LoginFragment extends Fragment {
                             String fullname = bundle.getString(USER_FULL_NAME);
 
                             Toast.makeText(getActivity(), getString(R.string.login_transfer_success, fullname), Toast.LENGTH_LONG).show();
+                           //todo IT still needs to be hosted in the main activity
+                            MapFragment mapFragment = new MapFragment();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.frameLayout,mapFragment).commit();
+
                         }
                     };
                     android.os.Handler uiThreadMessageHandler = new android.os.Handler() {

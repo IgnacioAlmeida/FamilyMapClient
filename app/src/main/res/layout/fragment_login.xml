@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:stretchColumns="2"
     tools:context=".LoginFragment">
 
-    <TableRow>
+        <TableRow>
 
         <TextView
             android:id="@+id/ServerHost"
@@ -66,7 +71,7 @@
             android:ems="10"
             android:layout_span="3"
             android:inputType="textPersonName"
-            android:text="" />
+            android:text="ignacioTest" />
     </TableRow>
 
     <TableRow
@@ -87,7 +92,7 @@
             android:ems="10"
             android:layout_span="3"
             android:inputType="textPassword"
-            android:text=""/>
+            android:text="123"/>
 
     </TableRow>
 
@@ -223,3 +228,4 @@
     </LinearLayout>
 
 </TableLayout>
+</ScrollView>

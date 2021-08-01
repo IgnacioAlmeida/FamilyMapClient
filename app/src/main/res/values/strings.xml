@@ -7,4 +7,5 @@
     <string name="register_error">User already exists</string>
     <string name="register_transfer_success">Register and data transfer successful for: %1$s</string>
     <string name="login_transfer_success">Login and data transfer successful for: %1$s</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
