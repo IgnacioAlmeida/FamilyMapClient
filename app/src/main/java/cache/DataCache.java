@@ -29,6 +29,16 @@ public class DataCache {
 
     private boolean status;
 
+    private boolean loginStatus;
+
+    public boolean getLoginStatus() {
+        return loginStatus;
+    }
+
+    public void setLoginStatus(boolean loginStatus) {
+        this.loginStatus = loginStatus;
+    }
+
     public boolean isStatus() {
         return status;
     }

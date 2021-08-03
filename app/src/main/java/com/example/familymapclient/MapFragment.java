@@ -1,16 +1,23 @@
 package com.example.familymapclient;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,6 +35,9 @@ import cache.DataCache;
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private GoogleMap map;
     Event[] events = DataCache.getInstance().getEvents();
+    private ImageView searchIcon;
+    private ImageView settingsIcon;
+
 
     public MapFragment() {
         // Required empty public constructor
@@ -37,6 +47,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.searchItem:
+                    Intent in = new Intent(getActivity(), SearchActivity.class);
+                    startActivity(in);
+                return true;
+            case R.id.settingsItem:
+                    Intent inSet = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(inSet);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -47,6 +81,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
         mapFragment.getMapAsync(this);
+
         return view;
     }
 
@@ -55,7 +90,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         this.map = googleMap;
         map.setOnMarkerClickListener(this);
         setPins(events);
-
+        LinearLayout bottomText = getView().findViewById(R.id.eventHolder);
+        bottomText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView personInfo = getView().findViewById(R.id.NameText);
+                if(!personInfo.getText().toString().equals("Click on a marker to see event details")) {
+                    Toast.makeText(getActivity(), "Person Activity is still being developed", Toast.LENGTH_LONG).show();
+                    Intent in = new Intent(getActivity(), PersonActivity.class);
+                    startActivity(in);
+                }
+                else{
+                    Toast.makeText(getActivity(), "Please, make sure that you first select a marker", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -75,8 +124,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 if(person.getGender().equals("f")){
                     image.setImageResource(R.drawable.ic_female);
                 }
-                //Here on click we call the
-                ((TextView) getView().findViewById(R.id.NameText)).setText(person.getFirstName() + " " + person.getLastName());
+                ((TextView) getView().findViewById(R.id.NameText)).setText(person.getFirstName() + " " + person.getLastName() + "\n"
+                                                                        + event.getEventType() + ": " + event.getCity()
+                                                                        + ", " + event.getCountry() + " (" + event.getYear() + ")");
             }
         }
 
@@ -100,5 +150,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
+    public void drawLines(Event event, Person person){
+
+    }
 
 }

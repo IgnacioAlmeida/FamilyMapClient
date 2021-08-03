@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment {
                             String fullname = bundle.getString(USER_FULL_NAME);
 
                             Toast.makeText(getActivity(), getString(R.string.login_transfer_success, fullname), Toast.LENGTH_LONG).show();
+                            DataCache.getInstance().setLoginStatus(true);
                            //todo IT still needs to be hosted in the main activity
                             MapFragment mapFragment = new MapFragment();
                             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -108,6 +109,7 @@ public class LoginFragment extends Fragment {
                             }
                             else{
                                 Toast.makeText(getActivity(),R.string.login_error,Toast.LENGTH_LONG).show();
+                                DataCache.getInstance().setLoginStatus(false);
                             }
                         }
                     };

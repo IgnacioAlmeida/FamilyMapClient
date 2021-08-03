@@ -17,7 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FamilyMapClient"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EventActivity"></activity>
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Family Map: Settings"/>
+        <activity android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Family Map: Search"/>
+        <activity android:name=".PersonActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Family Map: Person Details"/>
+        <activity android:name=".EventActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="Your Family Map"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -30,7 +41,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:label="Your Family Map">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -5,9 +5,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import Responses.EventResponse;
+import cache.DataCache;
 
 public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
@@ -19,7 +23,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loginFragment();
-        //mapFragment();
+
+//        findViewById(R.id.SignInButton).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                if(DataCache.getInstance().getLoginStatus() == true){
+////                    getSupportFragmentManager().beginTransaction().
+////                              replace(R.id.frameLayout,new MapFragment()).commit();
+////                }
+//
+//            }
+//        });
     }
 
     public void loginFragment(){
@@ -28,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(fragment == null) {
             fragment = new LoginFragment();
-            fragmentManager.beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.frameLayout, fragment)
                     .commit();
         }
@@ -39,10 +53,9 @@ public class MainActivity extends AppCompatActivity {
         fragment = fragmentManager.findFragmentById(R.id.frameLayout);
 
         if(fragment == null){
-            MapFragment mapFragment = new MapFragment();
-            fragmentManager
-                    .beginTransaction()
-                    .add(R.id.frameLayout, mapFragment)
+            fragment = new MapFragment();
+            fragmentManager.beginTransaction()
+                    .add(R.id.frameLayout, fragment)
                     .commit();
         }
     }
