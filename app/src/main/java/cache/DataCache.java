@@ -2,6 +2,7 @@ package cache;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class DataCache {
 
     private final Map<String, List<Person>> childrenByParentId = new HashMap<>();
 
-    private final Map<String, SortedSet<Event>> eventsByPersonId = new HashMap<>();
+//    private final Map<String, List<Event>> eventsByPersonId = new HashMap<>();
 
     private Person[] people;
 
@@ -30,6 +31,16 @@ public class DataCache {
     private boolean status;
 
     private boolean loginStatus;
+
+    private String currentPersonID;
+
+    public String getCurrentPersonID() {
+        return currentPersonID;
+    }
+
+    public void setCurrentPersonID(String currentPersonID) {
+        this.currentPersonID = currentPersonID;
+    }
 
     public boolean getLoginStatus() {
         return loginStatus;
@@ -56,6 +67,17 @@ public class DataCache {
 
     private DataCache(){
 
+    }
+
+    public List<Event> getPersonEvents(String personID){
+        List<Event> personEvents = new LinkedList<>();
+
+        for(int i = 0; i < events.length; i++){
+            if(events[i].getPersonID().equals(personID)){
+                personEvents.add(events[i]);
+            }
+        }
+        return personEvents;
     }
 
     public String getAuthToken() {
@@ -95,25 +117,29 @@ public class DataCache {
         this.peoplebyId = peopleByID;
     }
 
-    public void setEventsByPersonId (Event[] events){
-        SortedSet<Event> personEvents = new TreeSet<>();
-
-        for(int i = 0; i < events.length; i++){
-            if(events[i].getPersonID() == events[i+1].getPersonID()) {
-                personEvents.add(events[i]);
-                if(i + 2 == events.length){
-                    personEvents.add(events[i+1]);
-                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
-                    personEvents.clear();
-                    break;
-                }
-                if(events[i+1].getPersonID() != events[i+2].getPersonID()) {
-                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
-                    personEvents.clear();
-                }
-            }
-        }
-    }
+//    public void setEventsByPersonId (Event[] events){
+//        List<Event> personEvents = new LinkedList();
+//
+//        for(int i = 0; i < events.length; i++){
+//            if(events[i].getPersonID() == events[i+1].getPersonID()) {
+//                personEvents.add(events[i]);
+//                if(i + 2 == events.length){
+//                    personEvents.add(events[i+1]);
+//                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
+//                    personEvents.clear();
+//                    break;
+//                }
+//                if(events[i+1].getPersonID() != events[i+2].getPersonID()) {
+//                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
+//                    personEvents.clear();
+//                }
+//            }
+//        }
+//    }
+//
+//    public Map<String, List<Event>> getEventsByPersonId() {
+//        return eventsByPersonId;
+//    }
 
     public Event getEvent (String eventID){
         for(int i = 0; i < events.length; i++){

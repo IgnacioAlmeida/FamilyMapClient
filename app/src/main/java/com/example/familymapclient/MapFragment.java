@@ -95,8 +95,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             @Override
             public void onClick(View view) {
                 TextView personInfo = getView().findViewById(R.id.NameText);
+
                 if(!personInfo.getText().toString().equals("Click on a marker to see event details")) {
-                    Toast.makeText(getActivity(), "Person Activity is still being developed", Toast.LENGTH_LONG).show();
                     Intent in = new Intent(getActivity(), PersonActivity.class);
                     startActivity(in);
                 }
@@ -127,6 +127,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 ((TextView) getView().findViewById(R.id.NameText)).setText(person.getFirstName() + " " + person.getLastName() + "\n"
                                                                         + event.getEventType() + ": " + event.getCity()
                                                                         + ", " + event.getCountry() + " (" + event.getYear() + ")");
+                DataCache.getInstance().setCurrentPersonID(personID);
             }
         }
 

@@ -12,5 +12,6 @@
     <string name="search">SEARCH</string>
     <string name="settings">SETTINGS</string>
     <string name="home">BACK HOME</string>
+    <string name="life_events_group">LIFE EVENTS</string>
 
 </resources>
