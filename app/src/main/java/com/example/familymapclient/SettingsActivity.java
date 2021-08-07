@@ -8,35 +8,150 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 
+import cache.DataCache;
+
 public class SettingsActivity extends AppCompatActivity {
-    Switch liftStorySwitch, familyTreeSwitch, spouseSwitch, fatherSideSwitch, motherSideSwitch, maleSwitch, femaleSwitch;
+    Switch lifeStorySwitch, familyTreeSwitch, spouseSwitch, fatherSideSwitch, motherSideSwitch, maleSwitch, femaleSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        liftStorySwitch = findViewById(R.id.lifeStorySwitch);
-        liftStorySwitch.setChecked(true);
+        lifeStorySwitch = findViewById(R.id.lifeStorySwitch);
 
         familyTreeSwitch = findViewById(R.id.familyTreeSwitch);
-        familyTreeSwitch.setChecked(true);
 
         spouseSwitch = findViewById(R.id.spouseSwitch);
-        spouseSwitch.setChecked(true);
 
         fatherSideSwitch = findViewById(R.id.fatherSideSwitch);
-        fatherSideSwitch.setChecked(true);
 
         motherSideSwitch = findViewById(R.id.motherSideSwitch);
-        motherSideSwitch.setChecked(true);
 
         maleSwitch = findViewById(R.id.maleSwitch);
-        maleSwitch.setChecked(true);
 
         femaleSwitch = findViewById(R.id.femaleSwitch);
-        femaleSwitch.setChecked(true);
+
+        if(DataCache.getInstance().getSettingsVisitCounter() == 0){
+            lifeStorySwitch.setChecked(true);
+
+            familyTreeSwitch.setChecked(true);
+
+            spouseSwitch.setChecked(true);
+
+            fatherSideSwitch.setChecked(true);
+
+            motherSideSwitch.setChecked(true);
+
+            maleSwitch.setChecked(true);
+
+            femaleSwitch.setChecked(true);
+        }
+        else{
+            lifeStorySwitch.setChecked(DataCache.getInstance().isLifeStorySwitchBool());
+
+            familyTreeSwitch.setChecked(DataCache.getInstance().isFamilyTreeSwitchBool());
+
+            spouseSwitch.setChecked(DataCache.getInstance().isSpouseSwitchBool());
+
+            fatherSideSwitch.setChecked(DataCache.getInstance().isFatherSideSwitch());
+
+            motherSideSwitch.setChecked(DataCache.getInstance().isMotherSideSwitch());
+
+            maleSwitch.setChecked(DataCache.getInstance().isMaleSwitch());
+
+            femaleSwitch.setChecked(DataCache.getInstance().isFemaleSwitch());
+        }
+
+
+        lifeStorySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setLifeStorySwitchBool(true);
+                }
+                else{
+                    DataCache.getInstance().setLifeStorySwitchBool(false);
+
+                }
+            }
+        });
+        familyTreeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setFamilyTreeSwitchBool(true);
+                }
+                else{
+                    DataCache.getInstance().setFamilyTreeSwitchBool(false);
+
+                }
+            }
+        });
+        spouseSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setSpouseSwitchBool(true);
+                }
+                else{
+                    DataCache.getInstance().setSpouseSwitchBool(false);
+
+                }
+            }
+        });
+        fatherSideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setFatherSideSwitch(true);
+                }
+                else{
+                    DataCache.getInstance().setFatherSideSwitch(false);
+
+                }
+            }
+        });
+        motherSideSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setMotherSideSwitch(true);
+                }
+                else{
+                    DataCache.getInstance().setMotherSideSwitch(false);
+
+                }
+            }
+        });
+        maleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setMaleSwitch(true);
+                }
+                else{
+                    DataCache.getInstance().setMaleSwitch(false);
+
+                }
+            }
+        });
+        femaleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    DataCache.getInstance().setFemaleSwitch(true);
+                }
+                else{
+                    DataCache.getInstance().setFemaleSwitch(false);
+                }
+            }
+        });
+        DataCache.getInstance().setSettingsVisitCounter(+1);
+
+
     }
 
     @Override

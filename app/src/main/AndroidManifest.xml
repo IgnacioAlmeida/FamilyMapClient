@@ -27,7 +27,7 @@
             android:parentActivityName=".MainActivity"
             android:label="Family Map: Person Details"/>
         <activity android:name=".EventActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".PersonActivity"
             android:label="Your Family Map"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -8,11 +8,14 @@
     tools:context=".SearchActivity" >
 
     <SearchView
+        android:id="@+id/SearchView"
         android:layout_width="match_parent"
         android:layout_height="35dp" >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </SearchView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

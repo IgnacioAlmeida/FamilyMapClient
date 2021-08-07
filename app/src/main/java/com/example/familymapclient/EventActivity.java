@@ -7,32 +7,24 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.EventLog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
+import Model.Event;
+import cache.DataCache;
+
 public class EventActivity extends AppCompatActivity {
-    FragmentManager fragmentManager;
-    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        mapFragment();
-
-    }
-
-    public void mapFragment(){
-        fragmentManager = getSupportFragmentManager();
-        fragment = fragmentManager.findFragmentById(R.id.frameLayout);
-
-        if(fragment == null){
-            fragment = new MapFragment();
-            fragmentManager.beginTransaction()
-                    .add(R.id.frameLayout, fragment)
-                    .commit();
-        }
     }
 
     @Override

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,15 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import Model.Event;
 import Model.Person;
@@ -29,11 +25,12 @@ import cache.DataCache;
 public class PersonActivity extends AppCompatActivity {
     TextView firstNamePA, lastNamePA, genderPA;
     Person person;
+    IconSetter markers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
-
+        markers = new IconSetter();
         firstNamePA = findViewById(R.id.FirstNamePA);
         lastNamePA = findViewById(R.id.LastNamePA);
         genderPA = findViewById(R.id.GenderPA);
@@ -50,25 +47,30 @@ public class PersonActivity extends AppCompatActivity {
             genderPA.setText("Female");
         }
 
+        Map<String, Person> closeRelatives = DataCache.getInstance().getCloseRelatives(personID);
         List<Event> personEvents = DataCache.getInstance().getPersonEvents(personID);
         ExpandableListView expandableListView = findViewById(R.id.expandableListView);
-        expandableListView.setAdapter(new ExpandableListAdapter(personEvents));
+        expandableListView.setAdapter(new ExpandableListAdapter(personEvents, closeRelatives));
     }
 
     private class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-        List<Event> personEvents;
+        private List<Event> personEvents;
+        private Map<String, Person> closeRelatives;
         private static final int LIFE_EVENTS = 0;
+        private static final int FAMILY = 1;
 
 
 
-        ExpandableListAdapter(List<Event> personEvents){
+
+        ExpandableListAdapter(List<Event> personEvents, Map<String, Person> closeRelatives){
             this.personEvents = personEvents;
+            this.closeRelatives = closeRelatives;
         }
 
         @Override
         public int getGroupCount() {
-            return 1;
+            return 2;
         }
 
         @Override
@@ -76,6 +78,8 @@ public class PersonActivity extends AppCompatActivity {
             switch (groupPosition){
                 case LIFE_EVENTS:
                     return personEvents.size();
+                case FAMILY:
+                    return closeRelatives.size();
                 default:
                     throw new IllegalArgumentException("Unrecognized group position");
 
@@ -87,6 +91,8 @@ public class PersonActivity extends AppCompatActivity {
             switch (groupPosition){
                 case LIFE_EVENTS:
                     return getString(R.string.life_events_group);
+                case FAMILY:
+                    return getString(R.string.family);
                 default:
                     throw new IllegalArgumentException("Unrecognized group position");
             }
@@ -97,6 +103,8 @@ public class PersonActivity extends AppCompatActivity {
             switch (groupPosition) {
                 case LIFE_EVENTS:
                     return personEvents.get(childPosition);
+                case FAMILY:
+                    return closeRelatives.get(childPosition);
                 default:
                     throw new IllegalArgumentException("Unrecognized group position");
             }
@@ -130,6 +138,9 @@ public class PersonActivity extends AppCompatActivity {
                 case LIFE_EVENTS:
                     titleView.setText(R.string.life_events_group);
                     break;
+                case FAMILY:
+                    titleView.setText(R.string.family);
+                    break;
                 default:
                     throw new IllegalArgumentException("Unrecognized group position");
             }
@@ -143,7 +154,11 @@ public class PersonActivity extends AppCompatActivity {
             switch (groupPosition){
                 case LIFE_EVENTS:
                     itemView = getLayoutInflater().inflate(R.layout.family_and_events_group, parent, false);
-                    initializeFamilyAndEventsGroup(itemView,childPosition);
+                    initializeEventsGroup(itemView,childPosition);
+                    break;
+                case FAMILY:
+                    itemView = getLayoutInflater().inflate(R.layout.family_and_events_group, parent, false);
+                    initializeFamilyGroup(itemView,childPosition);
                     break;
                 default:
                     throw new IllegalArgumentException("Unrecognized group position");
@@ -156,35 +171,53 @@ public class PersonActivity extends AppCompatActivity {
             return true;
         }
 
-        private void initializeFamilyAndEventsGroup(View familyAndEventsView, final int childPoistion) {
-            TextView groupMain = familyAndEventsView.findViewById(R.id.GroupMain);
-            TextView groupSecondary = familyAndEventsView.findViewById(R.id.GroupSecondary);
-            ImageView groupIcon = familyAndEventsView.findViewById(R.id.GroupIcon);
+        private void initializeEventsGroup(View EventsView, final int childPoistion) {
+            TextView groupMain = EventsView.findViewById(R.id.PersonName);
+            TextView groupSecondary = EventsView.findViewById(R.id.GroupSecondary);
+            ImageView groupIcon = EventsView.findViewById(R.id.PersonGenderIcon);
             Event currentEvent = personEvents.get(childPoistion);
             groupMain.setText(currentEvent.getEventType().toUpperCase() + ": " + currentEvent.getCity() + ", "
                     + currentEvent.getCountry() + " (" + currentEvent.getYear() + ")");
 
             groupSecondary.setText(person.getFirstName() + " " + person.getLastName());
 
-            if(currentEvent.getEventType().equals("Birth")){
-                groupIcon.setImageResource(R.drawable.marker_pink);
-            }
-            if(currentEvent.getEventType().equals("Marriage")){
-                groupIcon.setImageResource(R.drawable.marker_green);
-            }
-            if(currentEvent.getEventType().equals("Death")){
-                groupIcon.setImageResource(R.drawable.marker_cyen);
-            }
-//            if (person.getGender().equals("m")) {
-//                groupIcon.setImageResource(R.drawable.ic_male);
-//            }
-//            if (person.getGender().equals("f")) {
-//                groupIcon.setImageResource(R.drawable.ic_female);
-//            }
+            markers.setMarkers(currentEvent, groupIcon);
 
-            familyAndEventsView.setOnClickListener(v -> {
-                Toast.makeText(PersonActivity.this,"Make events activity happen",Toast.LENGTH_LONG).show();
+            EventsView.setOnClickListener(v -> {
+                DataCache.getInstance().setCurrentEvent(currentEvent);
+                DataCache.getInstance().setInEventActivity(true);
+                Intent in = new Intent(PersonActivity.this, EventActivity.class);
+                startActivity(in);
             });
+        }
+
+        private void initializeFamilyGroup(View familyView, int childPosition){
+            TextView groupMain = familyView.findViewById(R.id.PersonName);
+            TextView groupSecondary = familyView.findViewById(R.id.GroupSecondary);
+            ImageView groupIcon = familyView.findViewById(R.id.PersonGenderIcon);
+            String relationship = null;
+            String relationships[] = closeRelatives.keySet().toArray(new String[0]);
+
+            relationship = relationships[childPosition];
+
+            Person currentPerson = closeRelatives.get(relationship);
+
+            String firstName = currentPerson.getFirstName();
+            String lastName = currentPerson.getLastName();
+
+            markers.setGenderIcons(currentPerson, groupIcon);
+
+
+            groupMain.setText(firstName + " " + lastName);
+
+            groupSecondary.setText(relationship);
+
+            familyView.setOnClickListener(v -> {
+                DataCache.getInstance().setCurrentPersonID(currentPerson.getPersonID());
+                Intent in = new Intent(PersonActivity.this, PersonActivity.class);
+                startActivity(in);
+            });
+
         }
     }
 

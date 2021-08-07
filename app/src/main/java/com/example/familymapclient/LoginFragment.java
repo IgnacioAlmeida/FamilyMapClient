@@ -1,5 +1,6 @@
 package com.example.familymapclient;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import Model.Event;
 import Model.Person;
 import Requests.LoginRequest;
 import Requests.RegisterRequest;
@@ -88,10 +90,8 @@ public class LoginFragment extends Fragment {
 
                             Toast.makeText(getActivity(), getString(R.string.login_transfer_success, fullname), Toast.LENGTH_LONG).show();
                             DataCache.getInstance().setLoginStatus(true);
-                           //todo IT still needs to be hosted in the main activity
-                            MapFragment mapFragment = new MapFragment();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.frameLayout,mapFragment).commit();
+                            Intent in = new Intent(getActivity(), MainActivity.class);
+                            startActivity(in);
 
                         }
                     };
@@ -261,6 +261,8 @@ public class LoginFragment extends Fragment {
 
             LoginResponse loginResponse = proxy.login(request);
             String authToken = loginResponse.getAuthtoken();
+            String loggedInPersonID = loginResponse.getPersonID();
+            DataCache.getInstance().setLoggedInPersonID(loggedInPersonID);
             boolean status = loginResponse.isSuccess();
             DataCache.getInstance().setStatus(status);
 
@@ -290,7 +292,8 @@ public class LoginFragment extends Fragment {
             ServerProxy proxy = new ServerProxy();
             String authToken = DataCache.getInstance().getAuthToken();
             DataCache.getInstance().setPeople(proxy.getPeople(authToken).getData());
-            DataCache.getInstance().setEvents(proxy.getEvents(authToken).getEvents());
+            Event[] events = proxy.getEvents(authToken).getEvents();
+            DataCache.getInstance().setEvents(events);
 
             Person[] persons = DataCache.getInstance().getPeople();
 

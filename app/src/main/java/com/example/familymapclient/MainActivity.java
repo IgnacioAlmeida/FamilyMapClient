@@ -21,19 +21,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        boolean loginStatus = DataCache.getInstance().isStatus();
 
-        loginFragment();
+        if(loginStatus == false) {
+            loginFragment();
+        }
+        else {
+            mapFragment();
 
-//        findViewById(R.id.SignInButton).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                if(DataCache.getInstance().getLoginStatus() == true){
-////                    getSupportFragmentManager().beginTransaction().
-////                              replace(R.id.frameLayout,new MapFragment()).commit();
-////                }
-//
-//            }
-//        });
+        }
     }
 
     public void loginFragment(){

@@ -13,5 +13,7 @@
     <string name="settings">SETTINGS</string>
     <string name="home">BACK HOME</string>
     <string name="life_events_group">LIFE EVENTS</string>
+    <string name="family">FAMILY</string>
+    <string name="non_existent_marker">"The selected event is hidden because of your filter settings"</string>
 
 </resources>
