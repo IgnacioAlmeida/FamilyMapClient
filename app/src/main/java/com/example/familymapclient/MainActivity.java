@@ -23,12 +23,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         boolean loginStatus = DataCache.getInstance().isStatus();
 
-        if(loginStatus == false) {
+        if(loginStatus == false || DataCache.getInstance().isLogout()) {
             loginFragment();
+            DataCache.getInstance().setLogout(false);
         }
         else {
             mapFragment();
-
         }
     }
 

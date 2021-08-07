@@ -15,6 +15,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,9 +50,25 @@ public class PersonActivity extends AppCompatActivity {
         }
 
         Map<String, Person> closeRelatives = DataCache.getInstance().getCloseRelatives(personID);
+        Map<String, Person> filteredRelatives = new HashMap<>();
+        List<Event> filteredEvents = new ArrayList<>();
+        for(Map.Entry<String, Person> entry : closeRelatives.entrySet()){
+            Person person = entry.getValue();
+            String key = entry.getKey();
+            if(DataCache.getInstance().isFemaleSwitch() && person.getGender().equals("f")){
+                filteredRelatives.put(key, person);
+            }
+            if(DataCache.getInstance().isMaleSwitch() && person.getGender().equals("m")){
+                filteredRelatives.put(key, person);
+            }
+
+        }
         List<Event> personEvents = DataCache.getInstance().getPersonEvents(personID);
+        for(Event e: personEvents){
+
+        }
         ExpandableListView expandableListView = findViewById(R.id.expandableListView);
-        expandableListView.setAdapter(new ExpandableListAdapter(personEvents, closeRelatives));
+        expandableListView.setAdapter(new ExpandableListAdapter(personEvents, filteredRelatives));
     }
 
     private class ExpandableListAdapter extends BaseExpandableListAdapter {

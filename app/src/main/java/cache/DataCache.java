@@ -69,6 +69,59 @@ public class DataCache {
 
     private List<Event> fatherSideEvents;
 
+    private boolean logout;
+
+    public boolean isLogout() {
+        return logout;
+    }
+
+    public void setLogout(boolean logout) {
+        this.logout = logout;
+    }
+
+    public void clear(){
+        String authToken = null;
+
+        Person[] people = null;
+
+        Event[] events = null;
+
+        boolean status = false;
+
+        boolean loginStatus = false;
+
+        String currentPersonID = null;
+
+        Event currentEvent = null;
+
+        boolean fatherSideSwitch;
+
+        boolean motherSideSwitch;
+
+        boolean maleSwitch;
+
+        boolean femaleSwitch;
+
+        int settingsVisitCounter = 0;
+
+        LatLng drawnEventLocation = null;
+
+        Person drawnPersonInfo = null;
+
+        String drawnEventID = null;
+
+        String loggedInPersonID = null;
+
+        List<Person> motherSide = null;
+
+        List<Event> motherSideEvents;
+
+         List<Person> fatherSide = null;
+
+        List<Event> fatherSideEvents = null;
+
+    }
+
     private List<Person> getMotherAncestors(Person mother){
         String grandmaID = mother.getMotherID();
         String grandpaID = mother.getFatherID();
@@ -151,7 +204,6 @@ public class DataCache {
 
 
 
-
     public List<Event> getMaleEvents(){
         List<Event> personEvents = new LinkedList<>();
 
@@ -219,14 +271,23 @@ public class DataCache {
     }
 
     public void getFilteredModels(List<Person> filteredPeople, List<Event> filteredEvents, String input){
+        Person loggedInPerson = getPersonById(loggedInPersonID);
+        List<Person> loggedInPersonMotherSide = getMotherAncestors(getPersonById(loggedInPerson.getMotherID()));
+        List<Person> loggedInPersonFatherSide = getMotherAncestors(getPersonById(loggedInPerson.getFatherID()));
+
         for(Person p : people){
             if(p.getFirstName().toLowerCase().contains(input) || p.getLastName().contains(input)){
-                filteredPeople.add(p);
+                if(p.getGender().equals("f") && isFemaleSwitch() || p.getGender().equals("m") && isMaleSwitch() || isFatherSideSwitch() && loggedInPersonFatherSide.contains(p) || isMotherSideSwitch() && loggedInPersonMotherSide.contains(p)) {
+                    filteredPeople.add(p);
+                }
             }
         }
         for(Event e : events){
-            if(e.getCountry().toLowerCase().contains(input) || e.getCity().toLowerCase().contains(input) || e.getEventType().toLowerCase().contains(input)){
-                filteredEvents.add(e);
+            if(e.getCountry().toLowerCase().contains(input) || e.getCity().toLowerCase().contains(input) || e.getEventType().toLowerCase().contains(input) || String.valueOf(e.getYear()).toLowerCase().contains(input)){
+                Person p = getPersonById(e.getPersonID());
+                if(p.getGender().equals("f") && isFemaleSwitch() || p.getGender().equals("m") && isMaleSwitch()) {
+                    filteredEvents.add(e);
+                }
             }
         }
     }
@@ -470,29 +531,6 @@ public class DataCache {
     public void setEvents(Event[] events) {
         this.events = events;
     }
-
-
-
-//    public void setEventsByPersonId (){
-//        List<Event> personEvents = new LinkedList();
-//
-//        for(int i = 0; i < events.length; i++){
-//            if(events[i].getPersonID() == events[i+1].getPersonID()) {
-//                personEvents.add(events[i]);
-//                if(i + 2 == events.length){
-//                    personEvents.add(events[i+1]);
-//                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
-//                    personEvents.clear();
-//                    break;
-//                }
-//                if(events[i+1].getPersonID() != events[i+2].getPersonID()) {
-//                    eventsByPersonId.put(events[i].getPersonID(), personEvents);
-//                    personEvents.clear();
-//                }
-//            }
-//        }
-//    }
-
 
     public Event getEvent (String eventID){
         for(int i = 0; i < events.length; i++){

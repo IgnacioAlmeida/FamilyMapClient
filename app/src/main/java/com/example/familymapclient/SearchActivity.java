@@ -44,6 +44,7 @@ public class SearchActivity extends AppCompatActivity {
         List<Person> people = new ArrayList<>();
         List<Event> events  = new ArrayList<>();
 
+
         adapter = new PersonAndEventsViewAdapter(people, events);
         recyclerView.setAdapter(adapter);
 

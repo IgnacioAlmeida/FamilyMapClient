@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import cache.DataCache;
 
@@ -149,7 +152,19 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
         DataCache.getInstance().setSettingsVisitCounter(+1);
+
+        LinearLayout logout = findViewById(R.id.Logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataCache.getInstance().clear();
+                DataCache.getInstance().setLogout(true);
+                Intent in = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(in);
+            }
+        });
 
 
     }
