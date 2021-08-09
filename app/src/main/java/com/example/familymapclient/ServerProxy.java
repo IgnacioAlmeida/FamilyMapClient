@@ -16,6 +16,7 @@ import Responses.EventsListResponse;
 import Responses.LoginResponse;
 import Responses.PersonListResponse;
 import Responses.RegisterResponse;
+import cache.DataCache;
 import serializer.JsonSerializer;
 
 
@@ -31,13 +32,18 @@ public class ServerProxy extends RequestHandler {
             connection.setDoOutput(true);
             connection.connect();
 
-            try(OutputStream requestBody = connection.getOutputStream()) {
-                String serialized = JsonSerializer.serialize(registerRequests);
-                writeString(serialized, requestBody);
-            }
-            if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String json = readString(connection.getInputStream());
-                response = JsonSerializer.deserialize(json, RegisterResponse.class);
+            if(registerRequests.getPassword() == null || registerRequests.getUserName() == null || registerRequests.getFirstName() == null || registerRequests.getLastName() == null ||
+                registerRequests.getEmail() == null || registerRequests.getGender()== null ) {
+                try (OutputStream requestBody = connection.getOutputStream()) {
+                    String serialized = JsonSerializer.serialize(registerRequests);
+                    writeString(serialized, requestBody);
+                }
+                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    String json = readString(connection.getInputStream());
+                    response = JsonSerializer.deserialize(json, RegisterResponse.class);
+                } else {
+                    response.setSuccess(false);
+                }
             }
             else{
                 response.setSuccess(false);
@@ -50,7 +56,7 @@ public class ServerProxy extends RequestHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        DataCache.getInstance().setRegistered(true);
         return response;
     }
 

@@ -71,6 +71,16 @@ public class DataCache {
 
     private boolean logout;
 
+    private boolean isRegistered;
+
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(boolean registered) {
+        isRegistered = registered;
+    }
+
     public boolean isLogout() {
         return logout;
     }
@@ -270,6 +280,28 @@ public class DataCache {
         this.settingsVisitCounter = settingsVisitCounter;
     }
 
+    private List<Person> dFilteredPeople = new ArrayList<>();
+
+    private List<Event> dEvents = new ArrayList<>();
+
+    public List<Person> getdFilteredPeople() {
+        return dFilteredPeople;
+    }
+
+    public List<Event> getdEvents() {
+        return dEvents;
+    }
+
+    private boolean inTesting;
+
+    public boolean isInTesting() {
+        return inTesting;
+    }
+
+    public void setInTesting(boolean inTesting) {
+        this.inTesting = inTesting;
+    }
+
     public void getFilteredModels(List<Person> filteredPeople, List<Event> filteredEvents, String input){
         Person loggedInPerson = getPersonById(loggedInPersonID);
         List<Person> loggedInPersonMotherSide = getMotherAncestors(getPersonById(loggedInPerson.getMotherID()));
@@ -278,7 +310,12 @@ public class DataCache {
         for(Person p : people){
             if(p.getFirstName().toLowerCase().contains(input) || p.getLastName().contains(input)){
                 if(p.getGender().equals("f") && isFemaleSwitch() || p.getGender().equals("m") && isMaleSwitch() || isFatherSideSwitch() && loggedInPersonFatherSide.contains(p) || isMotherSideSwitch() && loggedInPersonMotherSide.contains(p)) {
-                    filteredPeople.add(p);
+                    if(!isInTesting()) {
+                        filteredPeople.add(p);
+                    }
+                    else {
+                        dFilteredPeople.add(p);
+                    }
                 }
             }
         }
@@ -286,7 +323,12 @@ public class DataCache {
             if(e.getCountry().toLowerCase().contains(input) || e.getCity().toLowerCase().contains(input) || e.getEventType().toLowerCase().contains(input) || String.valueOf(e.getYear()).toLowerCase().contains(input)){
                 Person p = getPersonById(e.getPersonID());
                 if(p.getGender().equals("f") && isFemaleSwitch() || p.getGender().equals("m") && isMaleSwitch()) {
-                    filteredEvents.add(e);
+                    if(!isInTesting()) {
+                        filteredEvents.add(e);
+                    }
+                    else {
+                        dEvents.add(e);
+                    }
                 }
             }
         }

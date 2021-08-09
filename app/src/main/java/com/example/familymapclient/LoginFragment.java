@@ -89,7 +89,6 @@ public class LoginFragment extends Fragment {
                             String fullname = bundle.getString(USER_FULL_NAME);
 
                             Toast.makeText(getActivity(), getString(R.string.login_transfer_success, fullname), Toast.LENGTH_LONG).show();
-                            DataCache.getInstance().setLoginStatus(true);
                             Intent in = new Intent(getActivity(), MainActivity.class);
                             startActivity(in);
 
@@ -263,6 +262,7 @@ public class LoginFragment extends Fragment {
             String authToken = loginResponse.getAuthtoken();
             String loggedInPersonID = loginResponse.getPersonID();
             DataCache.getInstance().setLoggedInPersonID(loggedInPersonID);
+            DataCache.getInstance().setLoginStatus(true);
             boolean status = loginResponse.isSuccess();
             DataCache.getInstance().setStatus(status);
 
